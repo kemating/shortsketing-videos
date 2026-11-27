@@ -1,9 +1,33 @@
 <style>#doz_footer ._use_address,#doz_footer ._use_owner_collnum{display:none!important}</style>
+<style id="sk-perf3">
+/* 성능3: 스크롤 중에는 반복 장식 애니메이션 잠시 정지 → 스크롤 부드럽게 */
+html.sk-scr .sk,html.sk-scr .sk *,html.sk-scr .sk::before,html.sk-scr .sk::after,html.sk-scr .sk *::before,html.sk-scr .sk *::after{animation-play-state:paused!important}
+</style>
+<script>(function(){if(window.__skScr)return;window.__skScr=1;var h=document.documentElement,t=0,on=false;
+function end(){on=false;h.classList.remove('sk-scr')}
+window.addEventListener('scroll',function(){if(!on){on=true;h.classList.add('sk-scr')}clearTimeout(t);t=setTimeout(end,160)},{passive:true});})();</script>
+<style id="sk-perf3h">
+/* 성능3: 레이아웃 애니메이션 → GPU 애니메이션 */
+.sk-fa .eq .pill.b::after{left:-60%!important}
+@keyframes skSweep{0%{transform:translateX(0) skewX(-20deg)}40%,100%{transform:translateX(475%) skewX(-20deg)}}
+.sk-svc .scr .prog i,.sk-svc .ytf .vp i{width:100%!important;transform-origin:0 50%;transform:scaleX(0)}
+@keyframes skPr{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.sk-svc .tl .ph{left:4%!important;width:92%!important;background:none!important;box-shadow:none!important;animation-name:skPh3!important}
+.sk-svc .tl .ph::before{content:"";position:absolute;top:0;bottom:0;left:0;width:2px;background:#ff6b6b;box-shadow:0 0 6px #ff6b6b}
+@keyframes skPh3{from{transform:translateX(0)}to{transform:translateX(100%)}}
+/* 움직이는 매출 캡처 줄: 마스크 대신 가장자리 그라데이션 덮개 */
+.sk-fa .rows{-webkit-mask-image:none!important;mask-image:none!important;position:relative}
+.sk-fa .rows::before,.sk-fa .rows::after{content:"";position:absolute;top:-30px;bottom:-30px;width:8%;z-index:3;pointer-events:none}
+.sk-fa .rows::before{left:0;background:linear-gradient(90deg,#08161a,rgba(8,22,26,0))}
+.sk-fa .rows::after{right:0;background:linear-gradient(270deg,#08161a,rgba(8,22,26,0))}
+</style>
 <style>
 /* 포트폴리오·조회수 섹션 실제 영상 + 클릭 시 팝업 재생 */
 .sk-ra .reel,.sk-pf .v{background-size:cover;background-position:center;background-color:#0d1b1e}
 .sk-ra .reel{overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.35)!important;transition:transform .48s cubic-bezier(.2,.8,.2,1),opacity .48s,visibility .48s!important}
 .sk-ra .stage{perspective:none!important}
+.sk-ra .reel{will-change:transform,opacity;backface-visibility:hidden}
+.sk-ra .reel::before{will-change:opacity}
 .sk-ra .reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
 .sk-ra .reel .v{z-index:5}
 .sk-ra .reel::after{z-index:1;background:linear-gradient(rgba(0,0,0,.25),transparent 22%)!important}
@@ -455,7 +479,7 @@ r.style.transform='translate3d('+(o*w)+'px,'+(a*14)+'px,0) scale('+(1-a*.12)+')'
 [].forEach.call(dots.children,function(d,i){d.classList.toggle('on',i===cur)});count(VIEWS[cur%VIEWS.length]);R.forEach(function(r,i){r.classList.toggle('cur',i===cur)});vs()}
 function vs(){R.forEach(function(r,i){var v=r.querySelector('video');if(!v)return;if(i===cur&&run&&!document.hidden){if(!v.src)v.src=v.getAttribute('data-src');var p=v.play();if(p&&p.catch)p.catch(function(){})}else if(!v.paused)v.pause()})}document.addEventListener('visibilitychange',vs);
 function go(i){cur=(i+N)%N;lay();restart()}
-function restart(){clearInterval(timer);if(run)timer=setInterval(function(){cur=(cur+1)%N;lay()},2800)}
+function restart(){clearInterval(timer);if(run)timer=setInterval(function(){if(document.documentElement.classList.contains('sk-scr'))return;cur=(cur+1)%N;lay()},2800)}
 root.querySelector('.nav.p').onclick=function(){go(cur-1)};root.querySelector('.nav.n').onclick=function(){go(cur+1)};
 lay();
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){run=e.isIntersecting;restart();if(run)lay();else vs()})},{threshold:.3}).observe(root)}else{run=true;restart()}
